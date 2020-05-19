@@ -1,0 +1,134 @@
+3. List all the problems you find with the following Sitecore MVC code and what you would do to fix it.
+ 
+@{ 
+    Guid tempGuid = Guid.NewGuid(); 
+    String collapseId = tempGuid; 
+    String cssClass = "collapse container-fluid"; 
+    bool isExperienceEditor = Sitecore.Context.PageMode.IsExperienceEditor; 
+    if (isExperienceEditor) 
+        cssClass = "col-12"; 
+        collapseId = ""; 
+    } 
+    String backgroundClass = ""; 
+    Sitecore.Fields.CheckboxField checkbox = Model.Item.Fields["Gradient Background"]; 
+    if (checkbox.Checked) 
+    { 
+	 backgroundClass = "bg-stripe"; 
+    } 
+} 
+
+<section class="component cmp-related-resources @@backgroundClass"> 
+    <div class="container"> 
+        <div class="row"> 
+            <div class="col-12 text-center"><h2 class="hdr">@Html.Sitecore().Fields("Headline")</h2></div> 
+            @Html.Sitecore().DynamicPlaceholder("relatedresourceitem1") 
+            <div class="col-12 text-center"> 
+                <button type="button" class="btn-primary btn-icon show-related-content collapsed" datatoggle="collapse" data-target="#@@collapseId" aria-expanded="false" aria-controls="collapseExOne"> 
+                    <span class="round hollow"><i class="icon icon-paragraph-left"></i></span><span class="label-show">VIEW MORE RESOURCES</span><span class="label-hide">HIDE RESOURCES</span> 
+                </button> 
+            </div> 
+            <div class="@cssClass" id="@@collapseId"> 
+                <div class="row"> 
+                    @Html.Sitecore().DynamicPlaceholder("relatedresourceitem2") 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
+</section>
+
+
+1. 
+Issue: Assigning guid object to a string.
+Fix: String collapseId = tempGuid.ToString(); 
+
+2. 
+Issue: CollapseId would always has empty string value.
+Fix: Remove collapseId = ""; 
+
+3.
+Issue: You cannot use single-statement control flow in CSHTML.
+Fix: Enclose { }
+if (isExperienceEditor)
+    {
+        cssClass = "col-12";
+    }
+	
+4. 
+Issue: Malformed braces.
+Fix: Remove the excess }
+
+5. 
+Issue: Misplaced inline-code
+Fix: Move below code inside @{.....}
+@{ 
+    Guid tempGuid = Guid.NewGuid();
+    String collapseId = tempGuid.ToString();
+    String cssClass = "collapse container-fluid";
+    bool isExperienceEditor = Sitecore.Context.PageMode.IsExperienceEditor;
+    if (isExperienceEditor)
+    {
+        cssClass = "col-12";
+    }
+
+    String backgroundClass = ""; 
+    Sitecore.Fields.CheckboxField checkbox = Model.Item.Fields["Gradient Background"]; 
+    if (checkbox.Checked) 
+    { 
+        backgroundClass = "bg-stripe"; 
+    } 
+} 
+
+6. 
+Issue: Sitecore.Fields.CheckboxField
+Fix: Sitecore.Data.Fields.CheckboxField
+
+7. 
+Issue: No model defined
+Fix: Add @model RenderingModel directive
+
+8.
+Issue: Sitecore().Fields is not correct in @Html.Sitecore().Fields("Headline")
+Fix: Remove 's' @Html.Sitecore().Field("Headline")
+
+
+Fixed code below:
+
+@model RenderingModel
+
+@{ 
+    Guid tempGuid = Guid.NewGuid();
+    String collapseId = tempGuid.ToString();
+    String cssClass = "collapse container-fluid";
+    bool isExperienceEditor = Sitecore.Context.PageMode.IsExperienceEditor;
+    if (isExperienceEditor)
+    {
+        cssClass = "col-12";
+    }
+
+    String backgroundClass = "";
+    Sitecore.Data.Fields.CheckboxField checkbox = Model.Item.Fields["Gradient Background"];
+    if (checkbox.Checked)
+    {
+        backgroundClass = "bg-stripe";
+    }
+} 
+
+
+<section class="component cmp-related-resources @@backgroundClass"> 
+    <div class="container"> 
+        <div class="row"> 
+            <div class="col-12 text-center"><h2 class="hdr">@Html.Sitecore().Field("Headline")</h2></div> 
+            @Html.Sitecore().DynamicPlaceholder("relatedresourceitem1") 
+            <div class="col-12 text-center"> 
+                <button type="button" class="btn-primary btn-icon show-related-content collapsed" datatoggle="collapse" data-target="#@@collapseId" aria-expanded="false" aria-controls="collapseExOne"> 
+                    <span class="round hollow"><i class="icon icon-paragraph-left"></i></span><span class="label-show">VIEW MORE RESOURCES</span><span class="label-hide">HIDE RESOURCES</span> 
+                </button> 
+            </div> 
+            <div class="@cssClass" id="@@collapseId"> 
+                <div class="row"> 
+                    @Html.Sitecore().DynamicPlaceholder("relatedresourceitem2") 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
+</section>

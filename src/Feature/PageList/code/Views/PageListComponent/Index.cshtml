@@ -1,0 +1,23 @@
+﻿@using Sitecore.Mvc;
+@using Sitecore.Mvc.Presentation
+@using SkillsAssessment.Feature.PageList.Models;
+
+@model Teasers
+
+<h1>Page List</h1>
+
+<div>
+    <ul>
+        @foreach (var teaser in Model.TeaserItems)
+        {
+            <li>
+                <a href="@teaser.ItemUrl">
+                    <p>@teaser.Title</p>
+                    <img src="@teaser.ImageUrl"/>
+                    <p>@teaser.Description</p>
+                </a>
+            </li>
+        }
+
+    </ul>
+</div>
